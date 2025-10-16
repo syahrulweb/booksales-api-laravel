@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Data Author</title>
+    <title>Data Buku</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -21,7 +21,7 @@
         }
         .nav a {
             text-decoration: none;
-            background: #007bff;
+            background: #28a745;
             color: white;
             padding: 10px 16px;
             margin: 0 5px;
@@ -30,10 +30,10 @@
             transition: 0.2s;
         }
         .nav a:hover {
-            background: #0056b3;
+            background: #1e7e34;
         }
         table {
-            width: 70%;
+            width: 90%;
             margin: 0 auto;
             border-collapse: collapse;
             background: white;
@@ -47,18 +47,18 @@
             border-bottom: 1px solid #eee;
         }
         th {
-            background: #007bff;
+            background: #28a745;
             color: white;
             text-transform: uppercase;
             font-size: 14px;
         }
         tr:hover {
-            background: #f2f6ff;
+            background: #f4fff4;
         }
     </style>
 </head>
 <body>
-    <h1>Daftar Author</h1>
+    <h1>Daftar Buku</h1>
 
     <div class="nav">
         <a href="/author">Author</a>
@@ -69,12 +69,18 @@
     <table>
         <tr>
             <th>ID</th>
-            <th>Nama Author</th>
+            <th>Judul Buku</th>
+            <th>Genre</th>
+            <th>Tahun</th>
+            <th>Author</th>
         </tr>
-        @foreach ($authors as $author)
+        @foreach ($books as $book)
             <tr>
-                <td>{{ $author->id }}</td>
-                <td>{{ $author->name }}</td>
+                <td>{{ $book->id }}</td>
+                <td>{{ $book->title }}</td>
+                <td>{{ $book->genre }}</td>
+                <td>{{ $book->year }}</td>
+                <td>{{ $book->author->name }}</td>
             </tr>
         @endforeach
     </table>

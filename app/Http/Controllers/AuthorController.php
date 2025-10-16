@@ -8,7 +8,7 @@ class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::allData();
+        $authors = Author::with('books')->get();
         return view('author', compact('authors'));
     }
 }
