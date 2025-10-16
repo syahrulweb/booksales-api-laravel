@@ -9,7 +9,10 @@ class GenreController extends Controller
     public function index()
     {
         $genres = Genre::all();
-        return view('genre', compact('genres'));
+        return response()->json([
+            'success' => true,
+            'message' => 'get all genres',
+            'data' => $genres
+        ]);
     }
 }
-
