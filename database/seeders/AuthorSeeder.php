@@ -10,12 +10,11 @@ class AuthorSeeder extends Seeder
     public function run(): void
     {
         DB::table('authors')->insert([
-            ['name' => 'J.K. Rowling'],
-            ['name' => 'George R.R. Martin'],
-            ['name' => 'Agatha Christie'],
-            ['name' => 'Stephen King'],
-            ['name' => 'Isaac Asimov'],
+            ['name' => 'J.K. Rowling', 'nationality' => 'United Kingdom'],
+            ['name' => 'George R.R. Martin', 'nationality' => 'United States'],
+            ['name' => 'Agatha Christie', 'nationality' => 'United Kingdom'],
+            ['name' => 'Stephen King', 'nationality' => 'United States'],
+            ['name' => 'Isaac Asimov', 'nationality' => 'Russia'],
         ]);
     }
 }
-
