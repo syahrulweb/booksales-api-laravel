@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
 {
-    // READ ALL DATA
+    // GET all
     public function index()
     {
         $authors = Author::with('books')->get();
@@ -27,16 +27,33 @@ class AuthorController extends Controller
         ], 200);
     }
 
-    // CREATE DATA
+    // GET by ID
+    public function show($id)
+    {
+        $author = Author::with('books')->find($id);
+
+        if (!$author) {
+            return response()->json([
+                "success" => false,
+                "message" => "Author not found!"
+            ], 404);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Get author detail",
+            "data" => $author
+        ], 200);
+    }
+
+    // POST
     public function store(Request $request)
     {
-        // 1. Validator
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'nationality' => 'required|string|max:255'
+            'nationality' => 'nullable|string|max:100'
         ]);
 
-        // 2. Check validator error
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -45,17 +62,66 @@ class AuthorController extends Controller
             ], 422);
         }
 
-        // 3. Insert data
-        $author = Author::create([
-            'name' => $request->name,
-            'nationality' => $request->nationality
-        ]);
+        $author = Author::create($request->all());
 
-        // 4. Response
         return response()->json([
             'success' => true,
             'message' => 'Author created successfully',
             'data' => $author
         ], 201);
+    }
+
+    // PUT / PATCH
+    public function update(Request $request, $id)
+    {
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+                "success" => false,
+                "message" => "Author not found!"
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'nationality' => 'nullable|string|max:100'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $author->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Author updated successfully',
+            'data' => $author
+        ], 200);
+    }
+
+    // DELETE
+    public function destroy($id)
+    {
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+                "success" => false,
+                "message" => "Author not found!"
+            ], 404);
+        }
+
+        $author->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Author deleted successfully"
+        ], 200);
     }
 }

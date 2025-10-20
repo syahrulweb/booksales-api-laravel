@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    // GET: ambil semua data buku
     public function index()
     {
         $books = Book::with(['genre', 'author'])->get();
@@ -22,15 +21,31 @@ class BookController extends Controller
 
         return response()->json([
             "success" => true,
-            "message" => "Get all resources",
+            "message" => "Get all books",
             "data" => $books
         ], 200);
     }
 
-    // POST: tambah data buku baru
+    public function show($id)
+    {
+        $book = Book::with(['genre', 'author'])->find($id);
+
+        if (!$book) {
+            return response()->json([
+                "success" => false,
+                "message" => "Book not found!"
+            ], 404);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Get book detail",
+            "data" => $book
+        ], 200);
+    }
+
     public function store(Request $request)
     {
-        // 1. Validator
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -41,7 +56,6 @@ class BookController extends Controller
             'author_id' => 'required|integer|exists:authors,id',
         ]);
 
-        // 2. Check validator error
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -50,12 +64,10 @@ class BookController extends Controller
             ], 422);
         }
 
-        // 3. Upload Image
         $file = $request->file('cover_photo');
         $fileName = time() . '_' . $file->getClientOriginalName();
         $file->move(public_path('uploads/books'), $fileName);
 
-        // 4. Insert data
         $book = Book::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -66,11 +78,66 @@ class BookController extends Controller
             'author_id' => $request->author_id,
         ]);
 
-        // 5. Response
         return response()->json([
             'success' => true,
             'message' => 'Book created successfully',
             'data' => $book
         ], 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $book = Book::find($id);
+
+        if (!$book) {
+            return response()->json([
+                "success" => false,
+                "message" => "Book not found!"
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'genre_id' => 'required|integer|exists:genres,id',
+            'author_id' => 'required|integer|exists:authors,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $book->update($request->except('cover_photo'));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Book updated successfully',
+            'data' => $book
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $book = Book::find($id);
+
+        if (!$book) {
+            return response()->json([
+                "success" => false,
+                "message" => "Book not found!"
+            ], 404);
+        }
+
+        $book->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Book deleted successfully"
+        ], 200);
     }
 }
