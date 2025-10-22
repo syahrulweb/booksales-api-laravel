@@ -9,8 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('genres', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id(); // id INT(11) AUTO_INCREMENT
+            $table->string('name', 255); // name VARCHAR(255)
+            $table->text('description')->nullable(); // description TEXT, boleh kosong
             $table->timestamps();
         });
     }

@@ -51,7 +51,9 @@ class AuthorController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'nationality' => 'nullable|string|max:100'
+            'photo' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'nationality' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +64,7 @@ class AuthorController extends Controller
             ], 422);
         }
 
-        $author = Author::create($request->all());
+        $author = Author::create($request->only(['name', 'photo', 'bio', 'nationality']));
 
         return response()->json([
             'success' => true,
@@ -85,7 +87,9 @@ class AuthorController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'nationality' => 'nullable|string|max:100'
+            'photo' => 'nullable|string|max:255',
+            'bio' => 'nullable|string',
+            'nationality' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -96,7 +100,7 @@ class AuthorController extends Controller
             ], 422);
         }
 
-        $author->update($request->all());
+        $author->update($request->only(['name', 'photo', 'bio', 'nationality']));
 
         return response()->json([
             'success' => true,
