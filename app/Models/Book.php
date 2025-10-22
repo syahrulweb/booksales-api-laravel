@@ -30,4 +30,10 @@ class Book extends Model
     {
         return $this->belongsTo(Author::class);
     }
+    // relasi ke transaksi
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class); 
+    }
+    
 }
